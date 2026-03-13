@@ -6,10 +6,11 @@
   --base-white: #FFFFFF;
   --neutral-bg: #FAF9F6;
   --accent-gold: #C5A059;
+  --accent-rose: #e8305e;
   --text-main: rgb(53, 53, 53);
   --text-light: #888888;
-  --max-width: 1200px;
-  --section-padding: 10rem 2rem;
+  --max-width: 1400px;
+  --section-padding: 8rem 2rem;
   
   font-family: 'Pretendard', 'Spline Sans', -apple-system, system-ui, sans-serif;
   line-height: 1.6;
@@ -74,13 +75,13 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-  height: 90vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(rgba(250,249,246,0.6), rgba(250,249,246,0.6)), url('https://images.unsplash.com/photo-1519340241574-2dec49daa24a?w=1600&auto=format&fit=crop');
+  background: linear-gradient(rgba(250,249,246,0.7), rgba(250,249,246,0.7)), url('https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1600&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
   padding: 0 2rem;
@@ -98,7 +99,7 @@ nav a:hover {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   color: var(--text-main);
   margin-bottom: 3rem;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .hero .cta {
@@ -117,7 +118,7 @@ nav a:hover {
   transform: translateY(-5px);
 }
 
-/* Boutique (Image) Section */
+/* Boutique Section */
 .boutique-showcase {
   padding: var(--section-padding);
   background: #fff;
@@ -133,10 +134,10 @@ nav a:hover {
   width: 100%;
   height: auto;
   border-radius: 4px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
 }
 
-/* Product Grid */
+/* Product Grid (Enhanced for 12 items) */
 .section-title {
   text-align: center;
   margin-bottom: 6rem;
@@ -157,8 +158,8 @@ nav a:hover {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 2rem;
@@ -166,13 +167,14 @@ nav a:hover {
 
 .product-card {
   text-align: left;
+  cursor: pointer;
 }
 
 .product-image-wrapper {
   background: #fdfdfd;
   aspect-ratio: 1/1;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
@@ -189,34 +191,105 @@ nav a:hover {
 
 .status-tag {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1rem;
+  right: 1rem;
   background: rgba(255,255,255,0.9);
-  padding: 0.5rem 1rem;
-  font-size: 0.7rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 1px;
-  z-index: 10;
 }
 
 .product-info h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .product-info p {
   color: var(--text-light);
-  font-size: 0.95rem;
-  margin-bottom: 1.2rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
 }
 
 .price {
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--accent-gold);
 }
 
-/* Reviews Section V3 */
+/* Modal & Payment Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+}
+
+.modal-content h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 1rem;
+}
+
+.order-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.order-form input, .order-form select {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 1.2rem;
+  background: #3182f6; /* Toss Blue */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.pay-btn:hover {
+  background: #1b64da;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  cursor: pointer;
+  color: #888;
+}
+
+/* Reviews */
 .reviews-section {
   background: var(--neutral-bg);
   padding: var(--section-padding);
@@ -224,86 +297,16 @@ nav a:hover {
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 2rem;
 }
 
 .review-card-v3 {
   background: white;
-  padding: 3.5rem;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-}
-
-.review-content {
-  font-size: 1.1rem;
-  color: var(--text-main);
-  margin-bottom: 2.5rem;
-  line-height: 1.8;
-  font-style: italic;
-}
-
-.review-meta {
-  border-top: 1px solid #f0f0f0;
-  padding-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.user-name {
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.review-date {
-  color: #bbb;
-  font-size: 0.8rem;
-}
-
-/* Guide Container */
-.order-guide-container {
-  padding: var(--section-padding);
-}
-
-.guide-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6rem;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.step-item {
-  text-align: center;
-  position: relative;
-}
-
-.step-number {
-  font-family: 'Newsreader', serif;
-  font-size: 4.5rem;
-  color: #f2f1ef;
-  position: absolute;
-  top: -2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 0;
-}
-
-.step-item h4 {
-  position: relative;
-  z-index: 1;
-  font-size: 1.6rem;
-  margin-bottom: 1.5rem;
-}
-
-.step-item p {
-  color: var(--text-light);
-  line-height: 1.8;
+  padding: 3rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.02);
 }
 
 /* Footer */
@@ -316,25 +319,16 @@ footer {
   gap: 6rem;
 }
 
-footer p {
-  color: #999;
+@media (max-width: 1200px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-.footer-info h5 {
-  font-size: 0.8rem;
-  letter-spacing: 2px;
-  color: var(--accent-gold);
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-}
-
-@media (max-width: 1024px) {
-  header { padding: 1.5rem 2rem; }
+@media (max-width: 900px) {
   .product-grid { grid-template-columns: repeat(2, 1fr); }
-  footer { grid-template-columns: 1fr; gap: 4rem; padding: 6rem 2rem; }
 }
 
 @media (max-width: 768px) {
-  .product-grid, .guide-steps { grid-template-columns: 1fr; }
-  .section-title h2 { font-size: 2.2rem; }
+  header { padding: 1.5rem 2rem; }
+  .product-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; gap: 4rem; padding: 6rem 2rem; }
 }
