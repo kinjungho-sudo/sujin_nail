@@ -1,89 +1,158 @@
 import React from 'react'
+import { motion } from 'framer-motion'
+import { Calendar, Instagram, Phone, Clock, MapPin, ArrowRight } from 'lucide-react'
 import './App.css'
 
 function App() {
+  const products = [
+    {
+      id: 1,
+      title: "Birthday Cake",
+      description: "Perfect for a special day",
+      price: "50,000 KRW",
+      status: "ORDER AVAILABLE",
+      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=60"
+    },
+    {
+      id: 2,
+      title: "Wedding Cake",
+      description: "Recording the brightest moment",
+      price: "150,000 KRW",
+      status: "PRE-ORDER ONLY",
+      image: "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?w=800&auto=format&fit=crop&q=60"
+    },
+    {
+      id: 3,
+      title: "Dessert Set",
+      description: "Sweetness for your loved ones",
+      price: "30,000 KRW",
+      status: "ORDER AVAILABLE",
+      image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&auto=format&fit=crop&q=60"
+    }
+  ]
+
   return (
     <div className="App">
       <header>
-        <div className="logo">🍰 민지케이크</div>
+        <div className="logo serif">Minji Cake</div>
         <nav>
-          <a href="https://instagram.com/minji_cake" target="_blank" className="cta-button">상담하기</a>
+          <a href="#collections">Collections</a>
+          <a href="#guide">Order Guide</a>
+          <a href="#reviews">Reviews</a>
+          <a href="https://instagram.com/minji_cake" target="_blank">Contact</a>
         </nav>
       </header>
 
       <main>
-        {/* HERO SECTION */}
+        {/* HERO SECTION - Premium Look */}
         <section className="hero">
-          <span style={{color: 'var(--accent-gold)', fontWeight: '600', letterSpacing: '2px'}}>PREMIUM HANDMADE</span>
-          <h1>인생의 가장 달콤한 기록,<br/>민지케이크</h1>
-          <p>합정의 작은 공방에서 피어나는 따뜻한 수제 감성 이야기.</p>
-          <img 
-            src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=60" 
-            alt="수제 케이크" 
-            style={{width: '100%', maxWidth: '600px', borderRadius: '20px', marginBottom: '2rem'}}
-          />
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="hero-label"
+          >
+            EST. 2026 / HAPJEONG
+          </motion.span>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Baking Your<br/>Special Moments
+          </motion.h1>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <a href="#collections" className="cta">ORDER NOW</a>
+          </motion.div>
         </section>
 
-        {/* SERVICES */}
-        <section id="services">
-          <h2>우리의 서비스</h2>
-          <div className="services-grid">
-            <div className="service-card">
-              <h3>🎈 생일 케이크</h3>
-              <p>소중한 사람의 생일을 더욱 특별하게 만듭니다.</p>
-              <p className="price">50,000원 ~</p>
-            </div>
-            <div className="service-card">
-              <h3>💍 웨딩 케이크</h3>
-              <p>가장 빛나는 날을 위한 우아한 디자인.</p>
-              <p className="price">150,000원 ~</p>
-            </div>
-            <div className="service-card">
-              <h3>🍪 디저트 세트</h3>
-              <p>부담없이 즐기는 정성 가득한 세트.</p>
-              <p className="price">30,000원 ~</p>
-            </div>
+        {/* PRODUCT GRID - Ecommerce Style */}
+        <section id="collections" style={{ padding: '8rem 0' }}>
+          <div className="section-title">
+            <p className="serif" style={{ color: '#C5A059', letterSpacing: '2px', marginBottom: '1rem' }}>COLLECTIONS</p>
+            <h2>The Art of Cake</h2>
+          </div>
+          
+          <div className="product-grid">
+            {products.map((item) => (
+              <motion.div 
+                key={item.id}
+                className="product-card"
+                whileHover={{ y: -10 }}
+              >
+                <div className="product-image-wrapper">
+                  <div className="status-tag">{item.status}</div>
+                  <img src={item.image} alt={item.title} />
+                </div>
+                <div className="product-info">
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <div className="price">{item.price}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* ORDER GUIDE - Solution for user's pain point */}
-        <section id="guide">
-          <div className="order-guide">
-            <h2 style={{color: '#e8305e'}}>"가격이요? 기간이요?" 👋</h2>
-            <p style={{textAlign: 'center', marginBottom: '2rem'}}>매일 같은 질문에 답하는 번거로움을 줄여드릴게요!</p>
-            
-            <div className="guide-item">
-              <strong>📍 가격 안내</strong>
-              <p>기본 가격 외 디자인 난이도에 따라 추가 비용이 발생할 수 있습니다.</p>
-            </div>
-            <div className="guide-item">
-              <strong>📅 제작 기간</strong>
-              <p>모든 케이크는 수제 제작되므로 최소 3일 전 예약을 권장 드립니다.</p>
-            </div>
-            <div className="guide-item">
-              <strong>🏠 픽업 위치</strong>
-              <p>합정역 7번 출구 도보 5분 거리 (화-일 10:00~19:00 / 월요일 휴무)</p>
-            </div>
+        {/* ORDER GUIDE - Pain Point Solution */}
+        <section id="guide" className="order-guide-container">
+          <div className="section-title">
+            <p className="serif" style={{ color: '#C5A059', letterSpacing: '2px', marginBottom: '1rem' }}>HOW TO ORDER</p>
+            <h2>Your Journey to Sweetness</h2>
+            <p style={{ marginTop: '1rem' }}>3 WEEKS ADVANCE BOOKING IS HIGHLY RECOMMENDED</p>
           </div>
-        </section>
 
-        {/* REVIEWS */}
-        <section className="reviews">
-          <h2>따뜻한 후기</h2>
-          <div className="review-card">
-            <p>"디자인이 너무 예뻐서 먹기 아까웠어요! 합정역에서 찾아가기 쉽네요." - @cake_lover</p>
+          <div className="guide-steps">
+            <div className="step-item">
+              <span className="step-number">01</span>
+              <h4>Choose Design</h4>
+              <p>기존 디자인 선택 또는 <br/>커스텀 시안을 준비해주세요.</p>
+            </div>
+            <div className="step-item">
+              <span className="step-number">02</span>
+              <h4>Consultation</h4>
+              <p>인스타그램 DM을 통해 <br/>상세 예약 가능 여부를 확인하세요.</p>
+            </div>
+            <div className="step-item">
+              <span className="step-number">03</span>
+              <h4>Confirmation</h4>
+              <p>결제 및 최종 픽업 <br/>시간을 확정합니다.</p>
+            </div>
           </div>
-          <div className="review-card">
-            <p>"웨딩 케이크 덕분에 파티 분위기가 확 살았어요. 정말 감사합니다!" - @sh_lee</p>
+
+          <div style={{ textAlign: 'center', marginTop: '5rem' }}>
+            <div style={{ padding: '2rem', border: '1px solid #C5A059', display: 'inline-block', borderRadius: '4px' }}>
+              <p className="serif" style={{ fontSize: '1.2rem' }}>"매일 아침 합정 공방에서 정성껏 구워냅니다."</p>
+            </div>
           </div>
         </section>
       </main>
 
       <footer>
-        <div className="contact-info">
-          <p>📸 Instagram @minji_cake</p>
-          <p>📞 010-XXXX-XXXX</p>
-          <p>© 2026 민지케이크. All Rights Reserved.</p>
+        <div className="footer-brand">
+          <h2 className="serif">Minji Cake</h2>
+          <p>The one and only handmade cake in the world.</p>
+          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
+            <Instagram size={20} />
+            <Phone size={20} />
+          </div>
+        </div>
+
+        <div className="footer-info">
+          <h5>Location & Hours</h5>
+          <p><MapPin size={14} inline /> 합정역 7번 출구 도보 5분</p>
+          <p><Clock size={14} inline /> 화-일 10:00 - 19:00</p>
+          <p style={{ color: '#C5A059' }}>매주 월요일 정기 휴무</p>
+        </div>
+
+        <div className="footer-info">
+          <h5>Booking Policy</h5>
+          <p>최소 3일 전 예약 필수</p>
+          <p>기념일 시즌 3주 전 예약 권장</p>
+          <p>당일 픽업 문의 불가</p>
         </div>
       </footer>
     </div>
