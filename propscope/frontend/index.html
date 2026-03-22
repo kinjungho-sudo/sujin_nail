@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PropScope — 부동산 매매 시세 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@600;700&display=swap"
+  rel="stylesheet"
+/>
+<!--
+  카카오맵 API 키 발급: https://developers.kakao.com
+  YOUR_KAKAO_API_KEY 를 발급받은 키로 교체하세요.
+-->
+<script
+  type="text/javascript"
+  src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_API_KEY&libraries=services,clusterer"
+></script>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     헤더
+════════════════════════════════════ -->
+<header>
+  <div class="logo">PropScope</div>
+  <div class="legend">
+    <div class="legend-dot"><div class="dot naver"></div>네이버부동산</div>
+    <div class="legend-dot"><div class="dot zigbang"></div>직방</div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════
+     메인 레이아웃
+════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- ── 사이드바 (필터 패널) ── -->
+  <aside class="sidebar">
+
+    <!-- 지역 검색 -->
+    <div class="filter-section">
+      <div class="filter-label">📍 지역 검색</div>
+      <div class="region-input-wrap">
+        <input
+          type="text"
+          id="region-input"
+          placeholder="예: 마포구 공덕동"
+          autocomplete="off"
+        />
+        <button class="region-search-btn" onclick="searchAddress()" title="검색">🔍</button>
+      </div>
+      <div id="region-result" class="region-result"></div>
+    </div>
+
+    <!-- 매물 유형 -->
+    <div class="filter-section">
+      <div class="filter-label">🏠 매물 유형</div>
+      <div class="type-toggles">
+        <button class="type-toggle active" data-type="빌라">빌라</button>
+        <button class="type-toggle active" data-type="오피스텔">오피스텔</button>
+      </div>
+    </div>
+
+    <!-- 매매가 -->
+    <div class="filter-section">
+      <div class="filter-label">💰 매매가 (만원)</div>
+      <div class="range-wrap">
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최소</span>
+          <span class="range-values" id="price-min-display">-</span>
+        </div>
+        <input
+          type="range" id="price-min-range"
+          min="0" max="200000" step="500" value="0"
+        />
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최대</span>
+          <span class="range-values" id="price-max-display">-</span>
+        </div>
+        <input
+          type="range" id="price-max-range"
+          min="0" max="200000" step="500" value="200000"
+        />
+      </div>
+      <div class="dual-input" style="margin-top:8px;">
+        <input type="number" id="price-min" placeholder="최소" min="0" />
+        <span class="sep">~</span>
+        <input type="number" id="price-max" placeholder="최대" min="0" />
+      </div>
+    </div>
+
+    <!-- 전용면적 -->
+    <div class="filter-section">
+      <div class="filter-label">📐 전용면적 (㎡)</div>
+      <div class="range-wrap">
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최소</span>
+          <span class="range-values" id="area-min-display">-</span>
+        </div>
+        <input
+          type="range" id="area-min-range"
+          min="0" max="200" step="1" value="0"
+        />
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최대</span>
+          <span class="range-values" id="area-max-display">-</span>
+        </div>
+        <input
+          type="range" id="area-max-range"
+          min="0" max="200" step="1" value="200"
+        />
+      </div>
+      <div class="dual-input" style="margin-top:8px;">
+        <input type="number" id="area-min" placeholder="최소 ㎡" min="0" />
+        <span class="sep">~</span>
+        <input type="number" id="area-max" placeholder="최대 ㎡" min="0" />
+      </div>
+    </div>
+
+    <!-- 최소 층수 -->
+    <div class="filter-section">
+      <div class="filter-label">🏢 최소 층수</div>
+      <div class="range-wrap">
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최소</span>
+          <span class="range-values" id="floor-min-display">-</span>
+        </div>
+        <input
+          type="range" id="floor-min-range"
+          min="1" max="30" step="1" value="1"
+        />
+      </div>
+      <input
+        type="number" id="floor-min"
+        placeholder="최소 층수" min="1" max="30"
+        style="width:100%;padding:7px 8px;background:var(--bg-card);
+               border:1px solid var(--border);border-radius:var(--radius);
+               color:var(--text-primary);font-size:12px;outline:none;
+               margin-top:6px;"
+      />
+    </div>
+
+    <!-- 준공연도 -->
+    <div class="filter-section">
+      <div class="filter-label">📅 준공연도 이후</div>
+      <div class="range-wrap">
+        <div class="range-header">
+          <span style="color:var(--text-muted);font-size:11px;">최소 연도</span>
+          <span class="range-values" id="build-year-display">-</span>
+        </div>
+        <input
+          type="range" id="build-year-range"
+          min="1970" max="2024" step="1" value="1970"
+        />
+      </div>
+      <input
+        type="number" id="build-year"
+        placeholder="준공연도 (예: 2000)" min="1970" max="2024"
+        style="width:100%;padding:7px 8px;background:var(--bg-card);
+               border:1px solid var(--border);border-radius:var(--radius);
+               color:var(--text-primary);font-size:12px;outline:none;
+               margin-top:6px;"
+      />
+    </div>
+
+    <!-- 검색 버튼 -->
+    <button class="search-btn" id="search-btn" onclick="searchProperties()">
+      <div class="spinner"></div>
+      <span class="btn-text">🔍 매물 조회</span>
+    </button>
+
+  </aside>
+
+  <!-- ── 지도 + 오버레이 영역 ── -->
+  <div class="map-area">
+
+    <!-- 카카오맵 -->
+    <div id="kakao-map"></div>
+
+    <!-- 통계 패널 (오른쪽 상단 오버레이) -->
+    <div class="stats-overlay" id="stats-overlay">
+      <div class="stats-title">📊 시세 통계</div>
+
+      <div class="stat-row">
+        <span class="stat-label">총 매물</span>
+        <span class="stat-value" id="stat-total">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">평균 매매가</span>
+        <span class="stat-value gold" id="stat-avg">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">최저가</span>
+        <span class="stat-value" id="stat-min">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">최고가</span>
+        <span class="stat-value" id="stat-max">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">네이버 평균</span>
+        <span class="stat-value naver-color" id="stat-naver">-</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">직방 평균</span>
+        <span class="stat-value zigbang-color" id="stat-zigbang">-</span>
+      </div>
+
+      <div class="gap-badge" id="stat-gap">-</div>
+
+      <button class="pdf-btn" onclick="downloadPDF()">📄 PDF 리포트 다운로드</button>
+    </div>
+
+    <!-- 매물 목록 패널 (슬라이드업) -->
+    <div class="list-panel" id="list-panel">
+      <div class="list-panel-header" onclick="toggleListPanel()">
+        <div class="list-count">
+          매물 목록 &nbsp;<span id="list-count-val">0</span>건
+        </div>
+        <div class="arrow">▲</div>
+      </div>
+
+      <div class="list-panel-body">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>출처</th>
+              <th>유형</th>
+              <th>건물명</th>
+              <th>주소</th>
+              <th>매매가</th>
+              <th>면적</th>
+              <th>층수</th>
+              <th>준공</th>
+            </tr>
+          </thead>
+          <tbody id="list-body">
+            <tr>
+              <td colspan="9">
+                <div class="empty-state">
+                  <div class="empty-icon">🏠</div>
+                  <div class="empty-text">
+                    지역을 선택하고 매물 조회 버튼을 클릭하세요.
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.map-area -->
+</div><!-- /.layout -->
+
+<!-- 토스트 알림 컨테이너 -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="assets/app.js"></script>
+<script>
+  // 카카오맵 SDK 로드 완료 후 초기화
+  kakao.maps.load(function () {
+    initMap();
+  });
+</script>
+</body>
+</html>
