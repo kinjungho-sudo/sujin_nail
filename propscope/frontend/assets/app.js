@@ -3,7 +3,11 @@
  */
 
 // ── 설정 ─────────────────────────────────────────────────────
-const API_BASE = 'http://localhost:8000/api';
+// 로컬(localhost)이면 localhost:8000, 아니면 config.js의 Render URL 사용
+const _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const API_BASE = _isLocal
+  ? 'http://localhost:8000/api'
+  : (window.PROPSCOPE_CONFIG?.RENDER_API_URL ?? '') + '/api';
 
 // 카카오맵 초기 중심: 서울 시청
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.9780 };
