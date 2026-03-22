@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>PropScope 리포트 — {{ region }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11pt;
+    color: #1a1a2e;
+    background: #fff;
+  }
+
+  /* ── 커버 페이지 ─────────────────────────────────── */
+  .cover {
+    page-break-after: always;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%);
+    color: #fff;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .cover .logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 42pt;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #e2b04a;
+    margin-bottom: 12px;
+  }
+
+  .cover .tagline {
+    font-size: 13pt;
+    color: #a0b4cc;
+    margin-bottom: 48px;
+    letter-spacing: 1px;
+  }
+
+  .cover .region-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26pt;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 40px;
+    padding: 16px 32px;
+    border: 2px solid #e2b04a;
+    border-radius: 4px;
+  }
+
+  .cover .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .cover .meta-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 20px 16px;
+    border: 1px solid rgba(226,176,74,0.3);
+  }
+
+  .cover .meta-card .label {
+    font-size: 9pt;
+    color: #a0b4cc;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .cover .meta-card .value {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #e2b04a;
+  }
+
+  .cover .meta-card .unit {
+    font-size: 10pt;
+    color: #a0b4cc;
+    margin-top: 4px;
+  }
+
+  .cover .collected-at {
+    margin-top: 40px;
+    font-size: 10pt;
+    color: #6c8bb0;
+  }
+
+  /* ── 본문 공통 ───────────────────────────────────── */
+  .section {
+    padding: 40px 48px;
+    page-break-inside: avoid;
+  }
+
+  .section + .section {
+    border-top: 1px solid #e8eaf0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .section-number {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #e2b04a;
+    background: #1a1a2e;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17pt;
+    font-weight: 600;
+    color: #0f3460;
+  }
+
+  /* ── 01. 전체 시세 통계 ──────────────────────────── */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    border: 1px solid #e0e4ef;
+    border-radius: 8px;
+    padding: 20px 18px;
+    text-align: center;
+  }
+
+  .stat-card .sc-label {
+    font-size: 9pt;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .sc-value {
+    font-size: 15pt;
+    font-weight: 700;
+    color: #0f3460;
+  }
+
+  .stat-card.highlight {
+    background: #f0f4ff;
+    border-color: #4f70d0;
+  }
+
+  /* ── 02. 사이트별 평균가 비교 ────────────────────── */
+  .bar-compare {
+    margin-top: 16px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .bar-label {
+    width: 64px;
+    font-size: 10pt;
+    font-weight: 600;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .bar-label.naver { color: #03c75a; }
+  .bar-label.zigbang { color: #ff6e30; }
+
+  .bar-track {
+    flex: 1;
+    height: 36px;
+    background: #f0f2f8;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-size: 10pt;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .bar-fill.naver  { background: #03c75a; }
+  .bar-fill.zigbang { background: #ff6e30; }
+
+  .gap-note {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #fffbeb;
+    border-left: 4px solid #e2b04a;
+    font-size: 10pt;
+    color: #6b4c00;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* ── 03. 매물 유형별 분석 ────────────────────────── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .type-card {
+    border: 1px solid #e0e4ef;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .type-card-header {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 12pt;
+    color: #fff;
+    background: #0f3460;
+  }
+
+  .type-card-body {
+    padding: 16px 18px;
+  }
+
+  .type-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f2f8;
+    font-size: 10pt;
+  }
+
+  .type-row:last-child { border-bottom: none; }
+  .type-row .t-label { color: #6b7280; }
+  .type-row .t-value { font-weight: 600; color: #1a1a2e; }
+
+  /* ── 04/05. 매물 표 ──────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin-top: 8px;
+  }
+
+  thead tr {
+    background: #0f3460;
+    color: #fff;
+  }
+
+  thead th {
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  tbody tr:nth-child(even) { background: #f7f8fc; }
+  tbody tr:hover { background: #eef1fb; }
+
+  tbody td {
+    padding: 8px 8px;
+    border-bottom: 1px solid #e8eaf0;
+    vertical-align: top;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 12px;
+    font-size: 8.5pt;
+    font-weight: 600;
+  }
+
+  .badge.naver   { background: #e6f9ee; color: #037a36; }
+  .badge.zigbang { background: #fff0e8; color: #c44b00; }
+
+  /* ── 전체 매물 목록 페이지 나누기 ───────────────── */
+  .all-items { page-break-before: always; }
+
+  /* ── 페이지 하단 여백 ────────────────────────────── */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  @media print {
+    .cover { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     커버 페이지
+════════════════════════════════════ -->
+<div class="cover">
+  <div class="logo">PropScope</div>
+  <div class="tagline">부동산 매매 시세 비교 분석 리포트</div>
+  <div class="region-title">{{ region }}</div>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <div class="label">총 매물</div>
+      <div class="value">{{ total }}</div>
+      <div class="unit">건</div>
+    </div>
+    <div class="meta-card">
+      <div class="label">네이버</div>
+      <div class="value">{{ naver_count }}</div>
+      <div class="unit">건</div>
+    </div>
+    <div class="meta-card">
+      <div class="label">직방</div>
+      <div class="value">{{ zigbang_count }}</div>
+      <div class="unit">건</div>
+    </div>
+  </div>
+
+  <div class="collected-at">수집 일시: {{ collected_at }}</div>
+</div>
+
+<!-- ════════════════════════════════════
+     01. 전체 시세 통계
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <span class="section-title">전체 시세 통계</span>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card highlight">
+      <div class="sc-label">평균 매매가</div>
+      <div class="sc-value">{{ stats.avg_price_str }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">최저 매매가</div>
+      <div class="sc-value">{{ stats.min_price_str }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">최고 매매가</div>
+      <div class="sc-value">{{ stats.max_price_str }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     02. 사이트별 평균가 비교
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <span class="section-title">사이트별 평균가 비교</span>
+  </div>
+
+  <div class="bar-compare">
+    <div class="bar-row">
+      <span class="bar-label naver">네이버</span>
+      <div class="bar-track">
+        <div class="bar-fill naver" style="width: {{ naver_pct }}%">
+          {{ stats.naver_avg_str }}
+        </div>
+      </div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label zigbang">직방</span>
+      <div class="bar-track">
+        <div class="bar-fill zigbang" style="width: {{ zigbang_pct }}%">
+          {{ stats.zigbang_avg_str }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap-note">
+    💡 {{ stats.gap_note }} &nbsp;|&nbsp; 갭: {{ stats.price_gap_str }}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     03. 매물 유형별 분석
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <span class="section-title">매물 유형별 분석</span>
+  </div>
+
+  <div class="type-grid">
+    {% for ptype, ts in stats.by_type.items() %}
+    <div class="type-card">
+      <div class="type-card-header">{{ ptype }}</div>
+      <div class="type-card-body">
+        <div class="type-row">
+          <span class="t-label">매물 수</span>
+          <span class="t-value">{{ ts.count }}건</span>
+        </div>
+        <div class="type-row">
+          <span class="t-label">평균 매매가</span>
+          <span class="t-value">{{ ts.avg_price_str }}</span>
+        </div>
+        <div class="type-row">
+          <span class="t-label">평당가 (평균)</span>
+          <span class="t-value">{{ ts['평당가_str'] }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     04. 최저가 매물 TOP 5
+════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <span class="section-title">최저가 매물 TOP 5</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>출처</th>
+        <th>유형</th>
+        <th>건물명</th>
+        <th>주소</th>
+        <th>매매가</th>
+        <th>면적</th>
+        <th>층수</th>
+        <th>준공</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in stats.top5_lowest %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td><span class="badge {{ item.source }}">{{ '네이버' if item.source == 'naver' else '직방' }}</span></td>
+        <td>{{ item.property_type }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.address }}</td>
+        <td><strong>{{ item.price }}</strong></td>
+        <td>{{ item.area }}</td>
+        <td>{{ item.floor }}층</td>
+        <td>{{ item.build_year }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════
+     05. 전체 매물 목록
+════════════════════════════════════ -->
+<div class="section all-items">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <span class="section-title">전체 매물 목록 ({{ total }}건)</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>출처</th>
+        <th>유형</th>
+        <th>건물명</th>
+        <th>주소</th>
+        <th>매매가</th>
+        <th>면적</th>
+        <th>층수</th>
+        <th>준공</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td><span class="badge {{ item.source }}">{{ '네이버' if item.source == 'naver' else '직방' }}</span></td>
+        <td>{{ item.property_type }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.address }}</td>
+        <td><strong>{{ item.price }}</strong></td>
+        <td>{{ item.area }}</td>
+        <td>{{ item.floor }}층</td>
+        <td>{{ item.build_year }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
